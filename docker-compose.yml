@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  django:
+    container_name: django
+    build:
+      context: ./proxies_free
+    command: python manage.py runserver 0.0.0.0:8000
+
+    volumes:
+      - ./proxies_free:/usr/src/app
+    ports:
+      - 3030:8000
+    environment:
+      - ALLOWED_HOSTS=*
+      - DEBUG=1
