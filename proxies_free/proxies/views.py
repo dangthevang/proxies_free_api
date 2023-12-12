@@ -1,6 +1,5 @@
 import json
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from .__init__ import *
 import requests as r
@@ -10,11 +9,10 @@ from proxy_checking import ProxyChecker
 
 def index(request):
     bad_request = json.dumps({'Label':'Bad Request'})
-
     if 'TYPE_PROXIES' in request.GET:
         type_proxies = request.GET['TYPE_PROXIES']
-        # link_test = request.GET['LINK_TEST']
-        result = get_proxies_active(type_proxies)
+        idx = request.GET['INDEX']
+        result = get_proxies_active(type_proxies,idx)
     else:
         return HttpResponse(bad_request,content_type='application/json',status=400)
 
@@ -24,11 +22,14 @@ def index(request):
         res = json.dumps(result, ensure_ascii=False).encode('utf8')
         return HttpResponse(res,content_type='application/json',status=200)
 
-def get_proxies_active(type_proxies):
+def get_proxies_active(type_proxies, idx=None):
     source_proxies = r.get(source[type_proxies]).text.replace('\r','')
     list_proxies = source_proxies.split('\n')
+    stack = 0
     for proxy in list_proxies:
             if check_active({type_proxies:f'{type_proxies}://{proxy}'},proxy):
+                stack += 1
+            if stack == idx:
                 return f'{type_proxies}://{proxy}'
     return None
 
