@@ -11,7 +11,7 @@ def index(request):
     bad_request = json.dumps({'Label':'Bad Request'})
     if 'TYPE_PROXIES' in request.GET:
         type_proxies = request.GET['TYPE_PROXIES']
-        idx = request.GET['INDEX']
+        idx = int(request.GET['INDEX'])
         result = get_proxies_active(type_proxies,idx)
     else:
         return HttpResponse(bad_request,content_type='application/json',status=400)
