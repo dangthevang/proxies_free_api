@@ -11,7 +11,7 @@ def index(request):
     bad_request = json.dumps({'Label':'Bad Request'})
     if 'TYPE_PROXIES' in request.GET:
         type_proxies = request.GET['TYPE_PROXIES']
-        proxies = int(request.GET['PROXIES'])
+        proxies = request.GET['PROXIES']
         result = get_proxies_active(type_proxies,proxies)
     else:
         return HttpResponse(bad_request,content_type='application/json',status=400)
@@ -29,7 +29,7 @@ def get_proxies_active(type_proxies, proxies_deny=None):
         idx = list_proxies.index(proxies_deny)
     except ValueError:
         idx = 0
-    for proxy in list_proxies[idx:]:
+    for proxy in list_proxies[idx+1:]:
             if check_active({type_proxies:f'{type_proxies}://{proxy}'},proxy):
                 return f'{type_proxies}://{proxy}'
     return None
