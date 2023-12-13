@@ -41,7 +41,8 @@ def post_method(request):
 
 def get_method(request):
     t_proxy = request.GET['type_proxies']
-    l_proxy = get_proxies_active(t_proxy)
+    limit = request.GET['limit']
+    l_proxy = get_proxies_active(t_proxy,limit)
     return l_proxy
 
 
